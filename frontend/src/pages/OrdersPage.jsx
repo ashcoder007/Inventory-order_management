@@ -148,7 +148,7 @@ export default function OrdersPage() {
           </label>
           <div className="estimate">
             <span>Estimated total</span>
-            <strong>${estimatedTotal.toFixed(2)}</strong>
+            <strong>₹{estimatedTotal.toFixed(2)}</strong>
           </div>
           <button className="primary-button" type="submit" disabled={saving || products.length === 0 || customers.length === 0}>
             <Plus size={16} />
@@ -184,7 +184,7 @@ export default function OrdersPage() {
                       <td>{order.customer.full_name}</td>
                       <td>{order.product.name}</td>
                       <td>{order.quantity}</td>
-                      <td>${Number(order.total_amount).toFixed(2)}</td>
+                      <td>₹{Number(order.total_amount).toFixed(2)}</td>
                       <td>
                         <div className="action-row">
                           <button className="icon-button" type="button" onClick={() => setSelectedOrder(order)} aria-label="View order">
@@ -236,7 +236,7 @@ export default function OrdersPage() {
               </div>
               <div>
                 <dt>Total</dt>
-                <dd>${Number(selectedOrder.total_amount).toFixed(2)}</dd>
+                <dd>₹{Number(selectedOrder.total_amount).toFixed(2)}</dd>
               </div>
               <div>
                 <dt>Created</dt>

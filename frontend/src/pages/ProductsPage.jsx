@@ -178,7 +178,7 @@ export default function ProductsPage() {
                     <tr key={product.id}>
                       <td>{product.name}</td>
                       <td>{product.sku}</td>
-                      <td>${Number(product.price).toFixed(2)}</td>
+                      <td>₹{Number(product.price).toFixed(2)}</td>
                       <td>
                         <span className={product.quantity <= 5 ? "status danger" : "status ok"}>{product.quantity}</span>
                       </td>

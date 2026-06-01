@@ -97,7 +97,7 @@ export default function DashboardPage() {
               <div className="panel-header">
                 <h2>Inventory Value</h2>
               </div>
-              <div className="big-number">${inventoryValue.toFixed(2)}</div>
+              <div className="big-number">₹{inventoryValue.toFixed(2)}</div>
               <p className="empty-text">Calculated from product price and current stock.</p>
             </div>
           </div>
