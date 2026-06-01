@@ -74,6 +74,25 @@ SE_assessment/
 - Responsive React dashboard with low stock visibility
 - Dockerized frontend, backend, and PostgreSQL services
 
+## Live Deployment
+
+- Frontend: `https://inventory-order-management-cyan.vercel.app`
+- Backend API: `https://inventory-backend-ff3f.onrender.com`
+- API health check: `https://inventory-backend-ff3f.onrender.com/health`
+- API docs: `https://inventory-backend-ff3f.onrender.com/docs`
+
+The deployed frontend is configured to call the Render backend through:
+
+```env
+VITE_API_URL=https://inventory-backend-ff3f.onrender.com
+```
+
+The deployed backend must allow the Vercel frontend origin:
+
+```env
+FRONTEND_ORIGIN=https://inventory-order-management-cyan.vercel.app
+```
+
 ## Run With Docker Compose
 
 1. Create the environment file:
@@ -212,25 +231,79 @@ curl http://localhost:8000/orders
 
 ## Deployment Notes
 
-Backend on Render or Railway:
+Recommended deployment order:
+
+1. Create the hosted PostgreSQL database.
+2. Deploy the backend on Render.
+3. Test the backend health endpoint.
+4. Deploy the frontend on Vercel.
+5. Confirm the frontend URL is configured in backend CORS.
+
+Backend on Render:
 
 - Set `DATABASE_URL` to the external PostgreSQL URL.
-- Set `FRONTEND_ORIGIN` to the deployed frontend URL.
+- Set `FRONTEND_ORIGIN` to `https://inventory-order-management-cyan.vercel.app`.
+- Set `DEBUG=false`.
+- If deploying with the included Dockerfile, set Render's port/env to `PORT=8000` because the Dockerfile binds Gunicorn to port `8000`.
 - Use this start command: `gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT`
 - Set the root directory to `backend` when the platform supports monorepo configuration.
 
 Frontend on Vercel:
 
 - Set the root directory to `frontend`.
-- Set `VITE_API_URL` to the deployed backend URL.
+- Set `VITE_API_URL` to `https://inventory-backend-ff3f.onrender.com`.
 - Build command: `npm run build`
 - Output directory: `dist`
+- Redeploy the frontend after changing `VITE_API_URL` because Vite reads this value during build time.
 
 Database on Neon PostgreSQL:
 
 - Create a Neon project and database.
 - Copy the pooled or direct PostgreSQL connection string.
 - Use that value as `DATABASE_URL` for the backend.
+
+## Database Access
+
+You can view and query the PostgreSQL tables from whichever database provider is used for `DATABASE_URL`.
+
+If using Render PostgreSQL:
+
+1. Open the Render dashboard.
+2. Go to the PostgreSQL database service.
+3. Use the provider's connection details or internal/external database URL.
+4. Connect with a PostgreSQL client such as DBeaver, pgAdmin, TablePlus, or `psql`.
+
+If using Neon PostgreSQL:
+
+1. Open the Neon dashboard.
+2. Select the project and database.
+3. Open the SQL Editor.
+4. Run SQL queries directly in the browser.
+
+Useful SQL queries:
+
+```sql
+SELECT * FROM products;
+SELECT * FROM customers;
+SELECT * FROM orders;
+```
+
+To inspect tables from a terminal with `psql`:
+
+```bash
+psql "your_database_connection_string"
+```
+
+Then run:
+
+```sql
+\dt
+SELECT * FROM products;
+SELECT * FROM customers;
+SELECT * FROM orders;
+```
+
+Do not commit the real database connection string to git. Keep it only in Render environment variables or your local `.env` file.
 
 ## Notes
 
